@@ -46,28 +46,10 @@
 				}
 
 
-				// I tell the target slave to remove itself from the collection.
-				function remove() {
-
-					unbind( target );
-
-					target.remove();
-
-				}
-
-
 				// I invoke the reposition() method on each bound listener.
 				function reposition( deltaX, deltaY ) {
 
 					applyForEach( listeners, "reposition", [ deltaX, deltaY ] );
-
-				}
-
-
-				// I set the target slave.
-				function setTarget( controller ) {
-
-					target = controller;
 
 				}
 
@@ -88,17 +70,13 @@
 				// I am the collection of listeners that want to know about updated coordinates.
 				var listeners = [];
 
-				// I am the target slave - the one that was clicked to initiate movement tracking.
-				var target = null;
-
 
 				// Return public API.
 				return({
 					bind: bind,
 					moveTo: moveTo,
-					remove: remove,
 					reposition: reposition,
-					setTarget: setTarget
+					unbind: unbind
 				});
 
 			}
@@ -111,6 +89,8 @@
 				// -- Define Link Methods. ------------------ //
 
 
+				// I keep track of the initial mouse click on the master. The behavior differs
+				// depending on whether a slave was clicked; or, the master canvas was clicked.
 				function handleMouseDown( event ) {
 
 					var target = $( event.target );
@@ -121,8 +101,8 @@
 					// The user clicked on a slave.
 					if ( target.is( "li.slave" ) ) {
 
-						// Record the initial position of the mouse so we can calculate
-						// the coordinates of the reposition.
+						// Record the initial position of the mouse so we can calculate the 
+						// coordinates of the reposition (using deltas).
 						initialPageX = event.pageX;
 						initialPageY = event.pageY;
 
@@ -146,6 +126,8 @@
 				}
 
 
+				// I listen for mouse movements to broadcast new position deltas to all of
+				// the slaves.
 				function handleMouseMove( event ) {
 
 					controller.moveTo(
@@ -156,52 +138,24 @@
 				}
 
 
+				// I listen for mouse ups to determine when movement has ceased and positions
+				// of the slaves need to be finalized.
 				function handleMouseUp( event ) {
 
 					// Now that the user has finished moving the mouse, unbind the mouse events.
 					element.off( "mousemove.bnMaster" );
 					element.off( "mouseup.bnMaster" );
 
-					// Check to see if the mouse has moved since its down state.
-					if ( hasMoved( event.pageX, event.pageY ) ) {
+					// Tell all the slaves to finalize positions.
+					$scope.$apply(
+						function() {
 
-
-						$scope.$apply(
-							function() {
-
-								controller.reposition(
-									( event.pageX - initialPageX ),
-									( event.pageY - initialPageY )
-								);
-								
-							}
-						);
-
-
-					// The mouse has not moved since clicking - remove the target.
-					} else {
-
-
-						$scope.$apply(
-							function() {
-
-								controller.remove();
-
-							}
-						);
-						
-
-					}
-
-				}
-
-
-				// I determine if the given coordinates indicate that the mouse has moved.
-				function hasMoved( pageX, pageY ) {
-
-					return(
-						( pageX !== initialPageX ) ||
-						( pageY !== initialPageY )
+							controller.reposition(
+								( event.pageX - initialPageX ),
+								( event.pageY - initialPageY )
+							);
+							
+						}
 					);
 
 				}
@@ -214,10 +168,8 @@
 				var initialPageX = null;
 				var initialPageY = null;
 
-
 				// Bind to the mouse down event so we can interact with the slaves.
 				element.on( "mousedown.bnMaster", handleMouseDown );
-
 
 				// When the scope is destroyed, make sure to unbind all event handlers to help
 				// prevent a memory leak.

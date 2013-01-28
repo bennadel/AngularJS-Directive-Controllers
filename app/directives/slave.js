@@ -4,7 +4,7 @@
 
 	app.directive(
 		"bnSlave",
-		function() {
+		function( $document ) {
 
 
 			// I provide a way for directives to interact using the exposed API.
@@ -28,14 +28,6 @@
 				}
 
 
-				// I remove the current slave from the collection.
-				function remove() {
-
-					$scope.removeSlave( $scope.slave );
-
-				}
-
-
 				// I reposition the current slave to the given position (delta). This updates
 				// the slave directly, as this WILL happen inside of a $digest.
 				function reposition( deltaX, deltaY ) {
@@ -55,7 +47,6 @@
 				// Return public API.
 				return({
 					moveTo: moveTo,
-					remove: remove,
 					reposition: reposition
 				});
 
@@ -69,24 +60,46 @@
 				// -- Define Link Methods. ------------------ //
 
 
-				// I tell the master controller that this slave controller was clicked.
+				// I keep track of the initial click and start tracking movement.
 				function handleMouseDown( event ) {
 
-					$( window ).on( "mouseup.bnSlave", handleMouseUp );
-
-					masterController.setTarget( slaveController );
-
+					$document.on( "mousemove.bnSlave", handleMouseMove );
+					$document.on( "mouseup.bnSlave", handleMouseUp );
 
 				}
 
 
-				// I break the link between the master controller and the slave controller.
+				// I keep track of whether or not the mouse has been moved; if it has, we are 
+				// no longer going to care about the position of the mouse upon release - we'll
+				// consider the marker "activated".
+				function handleMouseMove( event ) {
 
+					$document.off( "mousemove.bnSlave" );
+					$document.off( "mouseup.bnSlave" );
+
+				}
+
+
+				// I keep track of the final mouse release - and, remove the slave. If this 
+				// event handler has fired, it means that the mouse-move event was not triggered,
+				// which means the element has not been moved.
 				function handleMouseUp( event ) {
 
-					$( window ).off( "mouseup.bnSlave" );
+					$document.off( "mousemove.bnSlave" );
+					$document.off( "mouseup.bnSlave" );
 
-					masterController.setTarget( null );
+					// Break the connection to the master controller so the master controller 
+					// cannot send any further communications. 
+					masterController.unbind( slaveController );
+
+					// Remove the slave from the collection.
+					$scope.$apply(
+						function() {
+
+							$scope.removeSlave( $scope.slave );
+							
+						}
+					);
 
 				}
 
@@ -94,18 +107,17 @@
 				// -- Define Link Variables. ---------------- //
 
 				
-				// Get the required controllers.
+				// Get the required controllers from the link arguments.
 				var slaveController = controllers[ 0 ];
 				var masterController = controllers[ 1 ];
 
-
-				// Listen to position updates from the master controller.
+				// Listen to position updates from the master controller. When you bind to the
+				// master controller, we expect to have our controller's moveTo() and reposition()
+				// methods called.
 				masterController.bind( slaveController );
 
-				// Listen to the mouse click in order to define the current slave as the target
-				// of the master.
+				// Listen to the mouse click in order to start tracking movement changes.
 				element.on( "mousedown.bnSlave", handleMouseDown );
-
 
 				// When the scope is destroyed, make sure to unbind all event handlers to help
 				// prevent a memory leak.
@@ -114,7 +126,8 @@
 					function( event ) {
 
 						element.off( "mousedown.bnSlave" );
-						$( window ).off( "mouseup.bnSlave" );
+						$document.off( "mousemove.bnSlave" );
+						$document.off( "mouseup.bnSlave" );
 
 					}
 				);
