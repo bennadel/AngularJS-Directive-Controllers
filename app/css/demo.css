@@ -1,0 +1,86 @@
+
+body {
+	font-family: tahoma, geneva, sans-serif ;
+	margin: 0px 0px 0px 0px ;
+	padding: 0px 0px 0px 0px ;
+}
+
+div.master {
+	bottom: 0px ;
+	left: 0px ;
+	position: fixed ;
+	right: 0px ;
+	top: 0px ;
+}
+
+ol.handles {
+	bottom: 0px ;
+	cursor: pointer ;
+	left: 0px ;
+	list-style-type: none ;
+	margin: 0px 0px 0px 0px ;
+	padding: 0px 0px 0px 0px ;
+	position: fixed ;
+	right: 200px ;
+	top: 0px ;
+}
+
+ol.handles li {
+	background-color: #F0F0F0 ;
+	border: 1px solid #CCCCCC ;
+	border-radius: 35px 35px 35px 35px ;
+	cursor: pointer ;
+	font-weight: bold ;
+	height: 35px ;
+	line-height: 34px ;
+	margin: -17.5px 0px 0px -17.5px ;
+	padding: 0px 0px 0px 0px ;
+	position: absolute ;
+	text-align: center ;
+	width: 35px ;
+}
+
+ol.leaderboard {
+	background-color: #F0F0F0 ;
+	bottom: 0px ;
+	list-style-type: none ;
+	margin: 0px 0px 0px 0px ;
+	overflow: auto ;
+	padding: 0px 0px 0px 0px ;
+	position: fixed ;
+	right: 0px ;
+	top: 0px ;
+	width: 200px ;
+}
+
+ol.leaderboard li {
+	border-bottom: 1px solid #CCCCCC ;
+	font-size: 16px ;
+	margin: 0px 0px 0px 0px ;
+	padding: 5px 0px 0px 0px ;
+	text-align: center ;
+}
+
+ol.leaderboard div.label {
+	border: 1px dotted #CCCCCC ;
+	border-radius: 35px 35px 35px 35px ;
+	font-weight: bold ;
+	height: 35px ;
+	line-height: 34px ;
+	margin: 0px auto 0px auto ;
+	width: 35px ;
+}
+
+ol.leaderboard div.position {}
+
+ol.leaderboard div.position:after {
+	clear: both ;
+	content: "" ;
+	display: block ;
+}
+
+ol.leaderboard span.coordinate {
+	float: left ;
+	padding: 5px 0px 10px 0px ;
+	width: 50% ;
+}
