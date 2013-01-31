@@ -32,8 +32,7 @@
 				// the slave directly, as this WILL happen inside of a $digest.
 				function reposition( deltaX, deltaY ) {
 
-					$scope.repositionSlave(
-						$scope.slave,
+					$scope.reposition(
 						( $scope.slave.x + deltaX ),
 						( $scope.slave.y + deltaY )
 					);
@@ -96,7 +95,7 @@
 					$scope.$apply(
 						function() {
 
-							$scope.removeSlave( $scope.slave );
+							$scope.remove();
 							
 						}
 					);
@@ -125,6 +124,11 @@
 					"$destroy",
 					function( event ) {
 
+						// Clean up the master-slave binding in case this element is removed outside
+						// of our internal event handling.
+						masterController.unbind( slaveController );
+
+						// Clear any existing mouse bindings.
 						element.off( "mousedown.bnSlave" );
 						$document.off( "mousemove.bnSlave" );
 						$document.off( "mouseup.bnSlave" );

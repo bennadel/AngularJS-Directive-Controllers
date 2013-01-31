@@ -110,7 +110,8 @@
 						element.on( "mousemove.bnMaster", handleMouseMove );
 						element.on( "mouseup.bnMaster", handleMouseUp );
 
-					// The user clicked on the master directly.
+					// The user clicked on the master canvas directly. We'll use this as an invite
+					// to create a new slave handle.
 					} else {
 
 						$scope.$apply(
@@ -126,8 +127,7 @@
 				}
 
 
-				// I listen for mouse movements to broadcast new position deltas to all of
-				// the slaves.
+				// I listen for mouse movements to broadcast new position deltas to all of the slaves.
 				function handleMouseMove( event ) {
 
 					controller.moveTo(

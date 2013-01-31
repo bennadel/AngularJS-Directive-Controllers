@@ -53,15 +53,6 @@
 			};
 
 
-			// I reposition the given slave.
-			$scope.repositionSlave = function( slave, x, y ) {
-
-				slave.x = x;
-				slave.y = y;
-
-			};
-
-
 			// -- Set Scope Variables. ---------------------- //
 
 
