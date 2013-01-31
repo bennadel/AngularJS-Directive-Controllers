@@ -146,6 +146,14 @@
 					element.off( "mousemove.bnMaster" );
 					element.off( "mouseup.bnMaster" );
 
+					// Check to see if the elements have moved at all. If they have not, then there
+					// is nothing more that the master needs to do.
+					if ( ! hasMoved( event.pageX, event.pageY ) ) {
+
+						return;
+
+					}
+
 					// Tell all the slaves to finalize positions.
 					$scope.$apply(
 						function() {
@@ -156,6 +164,17 @@
 							);
 							
 						}
+					);
+
+				}
+
+
+				// I determine if the given coorindates indicate movement from the original position.
+				function hasMoved( pageX, pageY ) {
+
+					return(
+						( pageX !== initialPageX ) ||
+						( pageY !== initialPageY )
 					);
 
 				}
