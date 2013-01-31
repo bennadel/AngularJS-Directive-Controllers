@@ -26,6 +26,18 @@
 			}
 
 
+			// I get a random coordinate based on the given constraints.
+			function getRandomCoordinate( minCoordinate, maxCoordinate ) {
+
+				var delta = ( maxCoordinate - minCoordinate );
+
+				return(
+					minCoordinate + Math.floor( Math.random() * delta )
+				);
+
+			}
+
+
 			// -- Define Scope Methods. --------------------- //
 
 
@@ -57,12 +69,12 @@
 
 
 			// This is our list of slaves and their coordinates. Starting with an initial
-			// collection of one.
+			// collection of one (at a random position).
 			$scope.slaves = [
 				{
 					id: 1,
-					x: 100,
-					y: 100
+					x: getRandomCoordinate( 50, 400 ),
+					y: getRandomCoordinate( 50, 200 )
 				}
 			];
 
