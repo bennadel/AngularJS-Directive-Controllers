@@ -14,7 +14,7 @@
 	</h1>
 
 
-	<!-- BEGIN: Master. -->
+	<!-- BEGIN: Master Canvas. -->
 	<div 
 		ng-controller="MasterController" 
 		bn-master
@@ -25,6 +25,7 @@
 		<ol class="handles">
 			<li 
 				ng-repeat="slave in slaves"
+				ng-controller="SlaveController"
 				bn-slave 
 				class="slave"
 				ng-style="{ left: ( slave.x + 'px' ), top: ( slave.y + 'px' ) }">
@@ -55,7 +56,7 @@
 
 
 	</div>
-	<!-- END: Master. -->
+	<!-- END: Master Canvas. -->
 
 
 	<!-- Load jQuery and AngularJS from the CDN. -->
@@ -71,6 +72,7 @@
 	<!-- Load the app module and its classes. -->
 	<script type="text/javascript" src="app/main.js"></script>
 	<script type="text/javascript" src="app/controllers/master-controller.js"></script>
+	<script type="text/javascript" src="app/controllers/slave-controller.js"></script>
 	<script type="text/javascript" src="app/directives/master.js"></script>
 	<script type="text/javascript" src="app/directives/slave.js"></script>
 
