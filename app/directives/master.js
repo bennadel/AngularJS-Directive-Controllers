@@ -59,6 +59,12 @@
 
 					var index = listeners.indexOf( listener );
 
+					if ( index === -1 ) {
+
+						return;
+
+					}
+
 					listeners.splice( index, 1 );
 
 				}
